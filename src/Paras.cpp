@@ -20,10 +20,9 @@ Paras::Paras(){
 }
 */
 
-// 20220502
+// Constructor with parameters for misasm
 Paras::Paras(int argc, char **argv){
 	init();
-//	if(parseParas(argc, argv)!=0) exit(1);
 	if(misasmParas(argc, argv)!=0) exit(1);
 
 	// check bam file
@@ -149,7 +148,7 @@ int Paras::parseParas(int argc, char **argv){
     }
 }
 
-//20220502
+// the parameters for misasm
 int Paras::misasmParas(int argc, char **argv){
 	if (argc < 2) { showUsage(); return 1; }
 
@@ -162,17 +161,17 @@ int Paras::misasmParas(int argc, char **argv){
     return parseMisasmParas(argc-1, argv);
 }
 
-// parse the parameters for misasm	20220503
+// parse the parameters for misasm
 int Paras::parseMisasmParas(int argc, char **argv){
 	int opt, threadNum_tmp = 1, mask_val;
 	blockSize = BLOCKSIZE;
 	slideSize = SLIDESIZE;
 
-	subblockSize = SUBBLOCKSIZE;	//20220502
-	gapextendSize = GAP_EXTEND_REG_SIZE; //20220502
-	abpairRatio = MIN_ABNORMAL_PAIRING_RATIO; //20220502
-	highclipRatio = HIGH_CLIP_BASE_RATIO; //20220502
-	indelRatio = MIN_INDEL_BASE_RATIO; //20220502
+	subblockSize = SUBBLOCKSIZE;
+	gapextendSize = GAP_EXTEND_REG_SIZE;
+	abpairRatio = MIN_ABNORMAL_PAIRING_RATIO;
+	highclipRatio = HIGH_CLIP_BASE_RATIO;
+	indelRatio = MIN_INDEL_BASE_RATIO;
 
 	min_sv_size_usr = MIN_SV_SIZE_USR;
 	minClipReadsNumSupportSV = MIN_CLIP_READS_NUM_THRES;
@@ -182,15 +181,15 @@ int Paras::parseMisasmParas(int argc, char **argv){
 	simpleReg_t *simple_reg;
 	string simple_reg_str;
 
-	while( (opt = getopt(argc, argv, ":b:s:u:g:a:l:i:c:o:p:t:M:h")) != -1 ){	//20220502
+	while( (opt = getopt(argc, argv, ":b:s:u:g:a:l:i:c:o:p:t:M:h")) != -1 ){
 		switch(opt){
 			case 'b': blockSize = stoi(optarg); break;
 			case 's': slideSize = stoi(optarg); break;
-			case 'u': subblockSize = stoi(optarg); break;	//20220502
-			case 'g': gapextendSize = stoi(optarg); break;	//20220502
-			case 'a': abpairRatio = stof(optarg); break;	//20220502
-			case 'l': highclipRatio = stof(optarg); break;	//20220502
-			case 'i': indelRatio = stof(optarg); break;		//20220502
+			case 'u': subblockSize = stoi(optarg); break;
+			case 'g': gapextendSize = stoi(optarg); break;
+			case 'a': abpairRatio = stof(optarg); break;
+			case 'l': highclipRatio = stof(optarg); break;
+			case 'i': indelRatio = stof(optarg); break;
 			case 'm': min_sv_size_usr = stoi(optarg); break;
 			case 'n': minClipReadsNumSupportSV = stoi(optarg); break;
 			case 'c': maxClipRegSize = stoi(optarg); break;
@@ -213,14 +212,14 @@ int Paras::parseMisasmParas(int argc, char **argv){
 	else if(mask_val==0) maskMisAlnRegFlag = false;
 	else{
 		cout << "Error: Please specify the correct mask flag for mis-aligned regions using -M option." << endl << endl;
-		showUsage();	//20220503
+		showUsage();
 		return 1;
 	}
 
 	delete_reads_flag = true;
 
 	opt = argc - optind; // the reference and BAM file on the command line
-	if(opt>=1) {	//20220503
+	if(opt>=1) {
 		refFile = argv[optind];
 		inBamFile = argv[optind+1];
 
@@ -245,11 +244,11 @@ int Paras::parseDetectParas(int argc, char **argv){
 	blockSize = BLOCKSIZE;
 	slideSize = SLIDESIZE;
 
-	subblockSize = SUBBLOCKSIZE;	//20220502
-	gapextendSize = GAP_EXTEND_REG_SIZE; //20220502
-	abpairRatio = MIN_ABNORMAL_PAIRING_RATIO; //20220502
-	highclipRatio = HIGH_CLIP_BASE_RATIO; //20220502
-	indelRatio = MIN_INDEL_BASE_RATIO; //20220502
+	subblockSize = SUBBLOCKSIZE;
+	gapextendSize = GAP_EXTEND_REG_SIZE;
+	abpairRatio = MIN_ABNORMAL_PAIRING_RATIO;
+	highclipRatio = HIGH_CLIP_BASE_RATIO;
+	indelRatio = MIN_INDEL_BASE_RATIO;
 
 	min_sv_size_usr = MIN_SV_SIZE_USR;
 	minClipReadsNumSupportSV = MIN_CLIP_READS_NUM_THRES;
@@ -260,15 +259,15 @@ int Paras::parseDetectParas(int argc, char **argv){
 	string simple_reg_str;
 
 //	while( (opt = getopt(argc, argv, ":b:s:c:o:p:t:M:h")) != -1 ){
-	while( (opt = getopt(argc, argv, ":b:s:u:g:a:l:i:c:o:p:t:M:h")) != -1 ){	//20220502
+	while( (opt = getopt(argc, argv, ":b:s:u:g:a:l:i:c:o:p:t:M:h")) != -1 ){
 		switch(opt){
 			case 'b': blockSize = stoi(optarg); break;
 			case 's': slideSize = stoi(optarg); break;
-			case 'u': subblockSize = stoi(optarg); break;	//20220502
-			case 'g': gapextendSize = stoi(optarg); break;	//20220502
-			case 'a': abpairRatio = stof(optarg); break;	//20220502
-			case 'l': highclipRatio = stof(optarg); break;	//20220502
-			case 'i': indelRatio = stof(optarg); break;		//20220502
+			case 'u': subblockSize = stoi(optarg); break;
+			case 'g': gapextendSize = stoi(optarg); break;
+			case 'a': abpairRatio = stof(optarg); break;
+			case 'l': highclipRatio = stof(optarg); break;
+			case 'i': indelRatio = stof(optarg); break;
 			case 'm': min_sv_size_usr = stoi(optarg); break;
 			case 'n': minClipReadsNumSupportSV = stoi(optarg); break;
 			case 'c': maxClipRegSize = stoi(optarg); break;
@@ -544,7 +543,7 @@ int Paras::parseAllParas(int argc, char **argv){
 // show the usage
 /*void Paras::showUsage(){
 	cout << "Program: " << PROG_NAME << " (" << PROG_DESC << ")" << endl;
-	cout << "Version: " << PROG_VERSION << " (using htslib V" << hts_version() << ")" << endl << endl;
+	cout << "Version: " << PROG_VERSION << " (using htslib " << hts_version() << ")" << endl << endl;
 	cout << "Usage: misasm <command> [options] <ASM_FILE> <BAM_FILE> [Region ...]" << endl << endl;
 
 	cout << "Description:" << endl;
@@ -562,35 +561,31 @@ int Paras::parseAllParas(int argc, char **argv){
 }
 */
 
-// 20220502 show the usage
+// show the usage of misasm
 void Paras::showUsage(){
 	cout << "Program: " << PROG_NAME << " (" << PROG_DESC << ")" << endl;
 	cout << "Version: " << PROG_VERSION << " (using htslib " << hts_version() << ")" << endl << endl;
-//	cout << "Usage: misasm [options] <ASM_FILE> <BAM_FILE> [Region ...]" << endl << endl;
-	cout << "Usage: misasm [options] <ASM_FILE> <BAM_FILE>" << endl << endl;//20220504
+	cout << "Usage: misasm [options] <ASM_FILE> <BAM_FILE>" << endl << endl;
 
 	cout << "Description:" << endl;
 	cout << "     ASM_FILE     Assembled sequence file (required)" << endl;
 	cout << "     BAM_FILE     Coordinate-sorted BAM file (required)" << endl;
-//	cout << "     Region       Limit assembled sequence region to process: CHR|CHR:START-END." << endl;
-//	cout << "                  If unspecified, all assembled sequence regions will be " << endl;
-//	cout << "                  processed (optional)" << endl << endl;
 
 	cout << "Options: " << endl;
-	cout << "     -b INT       block size [1000000]" << endl;
+	cout << "     -b INT       block size [10000]" << endl;
 	cout << "     -s INT       detect slide size [1000]" << endl;
-	cout << "     -u INT       detect subblock size [100]" << endl;	//20220502
-	cout << "     -g INT       gap extend region size [500]" << endl;	//20220502
-	cout << "     -a FLOAT     minimum proportion of abnormal pairing reads in misassemblies [0.3]" << endl;	//20220502
-	cout << "     -l FLOAT     minimum proportion of high-clipping reads in misassemblies [0.8]" << endl;	//20220502
-	cout << "     -i FLOAT     minimum proportion of indel reads in misassemblies [0.3]" << endl;	//20220502
+	cout << "     -u INT       detect subblock size [100]" << endl;
+	cout << "     -g INT       gap extend region size [500]" << endl;
+	cout << "     -a FLOAT     minimum proportion of abnormal pairing reads in misassemblies [0.3]" << endl;
+	cout << "     -l FLOAT     minimum proportion of high-clipping reads in misassemblies [0.8]" << endl;
+	cout << "     -i FLOAT     minimum proportion of indel reads in misassemblies [0.3]" << endl;
 
 	cout << "     -n INT       minimal clipping reads supporting a misassembly [7]" << endl;
 	cout << "     -c INT       maximal clipping region size to detect [10000]" << endl;
 //	cout << "     -r FILE      limit reference regions to process [null]: CHR|CHR:START-END" << endl;
 	cout << "     -o DIR       output directory [output]" << endl;
 	cout << "     -p STR       prefix of output result files [null]" << endl;
-//	cout << "     -t INT       number of concurrent work [1]" << endl;
+	cout << "     -t INT       number of concurrent work [1]" << endl;
 	cout << "     -h           show this help message and exit" << endl;
 }
 
@@ -610,11 +605,11 @@ void Paras::showDetectUsage(){
 	cout << "Options: " << endl;
 	cout << "     -b INT       block size [1000000]" << endl;
 	cout << "     -s INT       detect slide size [1000]" << endl;
-	cout << "     -u INT       detect subblock size [100]" << endl;	//20220502
-	cout << "     -g INT       gap extend region size [500]" << endl;	//20220502
-	cout << "     -a FLOAT     minimum proportion of abnormal pairing reads in misassemblies [0.3]" << endl;	//20220502
-	cout << "     -l FLOAT     minimum proportion of high-clipping reads in misassemblies [0.8]" << endl;	//20220502
-	cout << "     -i FLOAT     minimum proportion of indel reads in misassemblies [0.3]" << endl;	//20220502
+	cout << "     -u INT       detect subblock size [100]" << endl;
+	cout << "     -g INT       gap extend region size [500]" << endl;
+	cout << "     -a FLOAT     minimum proportion of abnormal pairing reads in misassemblies [0.3]" << endl;
+	cout << "     -l FLOAT     minimum proportion of high-clipping reads in misassemblies [0.8]" << endl;
+	cout << "     -i FLOAT     minimum proportion of indel reads in misassemblies [0.3]" << endl;
 
 //	cout << "     -m INT       minimal SV size to detect [2]" << endl;
 	cout << "     -n INT       minimal clipping reads supporting a misassembly [7]" << endl;
@@ -622,8 +617,8 @@ void Paras::showDetectUsage(){
 	cout << "     -r FILE      limit reference regions to process [null]: CHR|CHR:START-END" << endl;
 	cout << "     -o DIR       output directory [output]" << endl;
 	cout << "     -p STR       prefix of output result files [null]" << endl;
-//	cout << "     -t INT       number of concurrent work [1]" << endl;
-//	cout << "     -M INT       Mask mis-aligned regions [0]: 1 for yes, 0 for no" << endl; //20220429
+	cout << "     -t INT       number of concurrent work [1]" << endl;
+//	cout << "     -M INT       Mask mis-aligned regions [0]: 1 for yes, 0 for no" << endl;
 	cout << "     -h           show this help message and exit" << endl;
 }
 
@@ -726,22 +721,14 @@ void Paras::outputParas(){
 	cout << "Clipping number supporting misassembly: " << minClipReadsNumSupportSV << endl;
 	cout << "Block size: " << blockSize << " bp" << endl;
 	cout << "Slide size: " << slideSize << " bp" << endl;
-	cout << "Subblock size: " << subblockSize << " bp" << endl;	//20220502
-	cout << "Gap extend region size: " << gapextendSize << " bp" << endl;	//20220502
-	cout << "Minimum proportion of abnormal pairing reads in misassemblies: " << abpairRatio << endl;	//20220502
-	cout << "Minimum proportion of high-clipping reads in misassemblies: " << highclipRatio << endl;	//20220502
-	cout << "Minimum proportion of indel reads in misassemblies: " << indelRatio << endl;	//20220502
-	cout << "Maximal clipping region size: " << maxClipRegSize << " bp" << endl << endl;
-//	cout << "Expected sampling coverage: " << expected_cov_assemble << endl;	//20220504
-//	cout << "Number of concurrent works: " << num_threads << endl << endl;
-
-
-//	20220429
-//	cout << "Limited number of threads for each assemble work: " << num_threads_per_assem_work << endl;
-//	if(maskMisAlnRegFlag) cout << "Mask mis-aligned regions: yes" << endl;
-//	else cout << "Mask mis-aligned regions: no" << endl;
-//	if(delete_reads_flag) cout << "Delete local temporary reads: yes" << endl << endl;
-//	else cout << "Delete local temporary reads: no" << endl << endl;
+	cout << "Subblock size: " << subblockSize << " bp" << endl;
+	cout << "Gap extend region size: " << gapextendSize << " bp" << endl;
+	cout << "Minimum proportion of abnormal pairing reads in misassemblies: " << abpairRatio << endl;
+	cout << "Minimum proportion of high-clipping reads in misassemblies: " << highclipRatio << endl;
+	cout << "Minimum proportion of indel reads in misassemblies: " << indelRatio << endl;
+	cout << "Maximal clipping region size: " << maxClipRegSize << " bp" << endl;
+//	cout << "Expected sampling coverage: " << expected_cov_assemble << endl;
+	cout << "Number of concurrent works: " << num_threads << endl << endl;
 
 	string desc = "Limit regions to process:";
 	printLimitRegs(limit_reg_vec, desc);

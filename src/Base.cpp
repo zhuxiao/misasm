@@ -199,7 +199,7 @@ bool Base::isIlluminaHighIndelBase(float threshold){
 	return flag;
 }
 
-// determine whether the Illumina base is a high insertion base 20220504
+// determine whether the Illumina base is a high insertion base
 bool Base::isIlluminaHighInsBase(float threshold){
 	bool flag = false;
 	int32_t insNum;
@@ -357,7 +357,6 @@ size_t Base::getTotalClipNum(){
 	return clipVector.size() + num_shortClip;
 }
 
-// 20220422
 bool Base::isIlluminaHighClipBase(float threshold){
 	bool flag = false;
 	int32_t clipNum;
@@ -372,33 +371,3 @@ bool Base::isIlluminaHighClipBase(float threshold){
 	}
 	return flag;
 }
-
-//size_t Base::getInsNum(){
-//	return insVector.size() + num_shortIns;
-//}
-//
-//size_t Base::getDelNum(){
-//	return delVector.size() + num_shortdel;
-////	return del_num_from_del_vec + num_shortdel;
-//}
-//
-//// determine whether the base is a ins
-//bool Base::isInsBase(){
-//	bool flag = false;
-//	if(insVector.size()!=0 or num_shortIns!=0) flag = true; // ins
-//	return flag;
-//}
-//
-//// determine whether the base is a del
-//bool Base::isDelBase(){
-//	bool flag = false;
-//	if(del_num_from_del_vec!=0 or num_shortdel!=0) flag = true; // del
-//	return flag;
-//}
-//
-//// determine whether the base is a clip
-//bool Base::isClipBase(){
-//	bool flag = false;
-//	if(clipVector.size()!=0 or num_shortClip!=0) flag = true; // clip
-//	return flag;
-//}

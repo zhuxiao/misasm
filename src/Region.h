@@ -40,16 +40,11 @@ using namespace std;
 #define MIN_CLIP_NUM		5
 #define MIN_GAP_SIZE		5
 
-#define ILLUMINA_HIGH_CLIP_THRES			0.8	//0.7
-#define ILLUMINA_HIGH_CLIP_BASE_THRES		0.8	//0.5
+#define ILLUMINA_HIGH_CLIP_THRES			0.8
+#define ILLUMINA_HIGH_CLIP_BASE_THRES		0.8
 
-#define MAX_PAIR_THRES		0.3	//
-#define MAX_PAIR_THRES_POS		0.1	//20220426
-
-// 20220421
-// #define MISASSEMBLY_REGION_START_THRES		501
-
-//#define NOISE_REG			500	//20220421
+#define MAX_PAIR_THRES		0.3
+#define MAX_PAIR_THRES_POS		0.1
 
 class Region {
 	public:
@@ -72,9 +67,9 @@ class Region {
 
 		double fragmentsize, ratio_exisizemax, ratio_lessisizemin, ratio_abdirection, ratio_abref;
 
-		int64_t abpairstartpos, abpairendpos;	//20220424
+		int64_t abpairstartpos, abpairendpos;
 
-		string misType;	//20220504
+		string misType;
 
 	private:
 		vector<int64_t> disagrePosVector;  // element: the reference position with disagreement
@@ -101,9 +96,9 @@ class Region {
 		void detectIlluminaIndelReg();
 		void detectHighClipReg();
 		void detectIlluminaHighClipReg(vector<bam1_t*> &slideAlnVector);
-		void detectIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector);	//20220423
-		void detectIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector);	//20220423
-		void detectIlluminaBaseClipReg();	//20220422
+		void detectIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector);
+		void detectIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector);
+		void detectIlluminaBaseClipReg();
 		size_t getDisagreeNum();
 		size_t getSNVNum();
 		size_t getIndelNum();
@@ -112,8 +107,6 @@ class Region {
 		vector<reg_t*> getIndelVector();
 		vector<reg_t*> getClipRegVector();
 		vector<int64_t> getZeroCovPosVector();
-
-
 
 	private:
 		bool IsWholeRefGap();
@@ -127,7 +120,7 @@ class Region {
 		void destroyClipRegVector();
 		int computeAbCovReg();
 		reg_t* allocateReg(string &chrname, int64_t startPosReg, int64_t endPosReg);
-		reg_t* allocateMisReg(string &chrname, int64_t startPosReg, int64_t endPosReg, string misType);	//20220504
+		reg_t* allocateMisReg(string &chrname, int64_t startPosReg, int64_t endPosReg, string misType);
 		double computeMeanCovReg(int64_t startPosReg, int64_t endPosReg);
 		int computeHighIndelEventRegNum();
 		int32_t computeReadIndelEventNumReg(int64_t startPosReg, int64_t endPosReg);
@@ -153,7 +146,6 @@ class Region {
 		bool isIlluminaAbisize(vector<bam1_t*> &slideAlnVector, int64_t startPos, int64_t endPos);
 		bool isIlluminaAbPairing(vector<bam1_t*> &slideAlnVector, int64_t startPos, int64_t endPos);
 
-		//	20220421
 		//	get Misjoin position
 		reg_t* getIlluminaBaseClipReg(int64_t startCheckPos);
 		reg_t* getIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos);

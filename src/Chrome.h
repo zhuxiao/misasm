@@ -74,7 +74,7 @@ class Chrome{
 		Chrome(string& chrname, int chrlen, faidx_t *fai, Paras *paras, vector<Chrome*> *chr_vec);
 		virtual ~Chrome();
 		void setOutputDir(string& out_dir_detect_prefix, string& out_dir_assemble_prefix, string& out_dir_call_prefix);
-		void setMisasmOutputDir(string& out_dir_detect_prefix);//20220503
+		void setMisasmOutputDir(string& out_dir_detect_prefix);
 		string getVarcandIndelFilename();
 		string getVarcandClipregFilename();
 		int generateChrBlocks();
@@ -84,7 +84,7 @@ class Chrome{
 		void removeFPIndelSnvInClipReg(vector<mateClipReg_t*> &mate_clipReg_vec);;
 		void chrMergeDetectResultToFile();
 		void chrMergeDetectResultToFileIllumina();
-		void chrMergeMisasmResultToFile();	//20220503
+		void chrMergeMisasmResultToFile();
 		void loadPrevAssembledInfo();
 		void chrLoadDataAssemble();
 		int chrGenerateLocalAssembleWorkOpt();

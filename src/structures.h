@@ -28,7 +28,7 @@ typedef struct{
 	int32_t leftExtGapSize, rightExtGapSize;		// used for extended gap size on both sides of the region according to alignments
 	string refseq, altseq;
 	bool call_success_status, short_sv_flag, zero_cov_flag, aln_seg_end_flag;
-	string misType;	//20220504
+	string misType;
 }reg_t;
 
 // from clipReg.h

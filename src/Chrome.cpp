@@ -2,6 +2,7 @@
 #include <pthread.h>
 #include "util.h"
 #include "Chrome.h"
+
 #include "Thread.h"
 
 // Constructor with parameters
@@ -70,14 +71,14 @@ void Chrome::setOutputDir(string& out_dir_detect_prefix, string& out_dir_assembl
 	blat_var_cand_clipReg_filename = out_dir_call_prefix + "/" + "blat_aln_info_" + chrname + "_clipReg";
 }
 
-// set the misasm output directory	20220503
+// set the misasm output directory
 void Chrome::setMisasmOutputDir(string& out_dir_detect_prefix){
 	out_dir_detect = out_dir_detect_prefix + "/" + chrname;
 
 	out_dir_detect = preprocessPipeChar(out_dir_detect);
 
-	out_filename_detect_indel = out_dir_detect + "_indel";	//20220429
-	out_filename_detect_clipReg = out_dir_detect + "_misjoin";	//20220429
+	out_filename_detect_indel = out_dir_detect + "_indel";
+	out_filename_detect_clipReg = out_dir_detect + "_misjoin";
 	misAln_reg_filename = out_dir_detect + "_misaln_reg";
 }
 
@@ -1195,7 +1196,6 @@ void Chrome::chrMergeDetectResultToFileIllumina(){
 	out_file_clipReg.close();
 }
 
-//	20220503
 // merge detect result to single file
 void Chrome::chrMergeMisasmResultToFile(){
 	size_t i, j;
@@ -1217,9 +1217,7 @@ void Chrome::chrMergeMisasmResultToFile(){
 		indel_vec = bloc->indelVector;
 		for(j=0; j<indel_vec.size(); j++){
 			reg = indel_vec.at(j);
-//			out_file_indel << reg->chrname << "\t" << reg->startRefPos << "\t" <<  reg->endRefPos << endl;
-//			out_file_indel << reg->chrname << ":" << reg->startRefPos << "-" <<  reg->endRefPos << endl;
-			out_file_indel << reg->chrname << ":" << reg->startRefPos << "-" <<  reg->endRefPos << "\t" << reg->misType << endl;	//20220504
+			out_file_indel << reg->chrname << ":" << reg->startRefPos << "-" <<  reg->endRefPos << "\t" << reg->misType << endl;
 		}
 	}
 	out_file_indel.close();
@@ -1236,8 +1234,7 @@ void Chrome::chrMergeMisasmResultToFile(){
 		clip_vec = bloc->clipRegVector;
 		for(j=0; j<clip_vec.size(); j++){
 			reg = clip_vec.at(j);
-//			out_file_clipReg << reg->chrname << "\t" << reg->startRefPos << "\t" <<  reg->endRefPos << endl;
-			out_file_clipReg << reg->chrname << ":" << reg->startRefPos << "-" <<  reg->endRefPos << "\t"<< "Misjoin" << "\t"<< reg->misType << endl;	//20220504
+			out_file_clipReg << reg->chrname << ":" << reg->startRefPos << "-" <<  reg->endRefPos << "\t"<< "Misjoin" << "\t"<< reg->misType << endl;
 		}
 	}
 
@@ -2024,10 +2021,10 @@ int Chrome::chrGenerateLocalAssembleWorkOpt_mt(){
 		mt[i].setNumThreads(paras->num_threads);
 		mt[i].setBlockVec(&blockVector);
 		mt[i].setUserThreadID(i);
-		if(!mt[i].startGenAssembleWorkOpt()){
-			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
-			exit(1);
-		}
+//		if(!mt[i].startGenAssembleWorkOpt()){
+//			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
+//			exit(1);
+//		}
 	}
 	for(size_t i=0; i<paras->num_threads; i++){
 		if(!mt[i].join()){
@@ -2135,12 +2132,12 @@ void Chrome::chrCall_mt(){
 	MultiThread mt[paras->num_threads];
 	for(size_t i=0; i<paras->num_threads; i++){
 		mt[i].setNumThreads(paras->num_threads);
-		mt[i].setVarCandVec(&var_cand_vec, &var_cand_clipReg_vec);
+//		mt[i].setVarCandVec(&var_cand_vec, &var_cand_clipReg_vec);
 		mt[i].setUserThreadID(i);
-		if(!mt[i].startCall()){
-			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
-			exit(1);
-		}
+//		if(!mt[i].startCall()){
+//			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
+//			exit(1);
+//		}
 	}
 	for(size_t i=0; i<paras->num_threads; i++){
 		if(!mt[i].join()){
@@ -3330,7 +3327,6 @@ void Chrome::saveCallIndelClipReg2File(string &outfilename_indel, string &outfil
 
 // identify indels for chrome
 int Chrome::chrIlluminaMisIdentify(){
-	Time time;
 
 	if(chrlen>MIN_CHR_LEN){
 //		if(print_flag) cout << "[" << time.getTime() << "]: processing Chr: " << chrname << ", size: " << chrlen << " bp" << endl;
@@ -3343,11 +3339,7 @@ int Chrome::chrIlluminaMisIdentify(){
 		else chrIlluminaMisIdentify_mt();  // multiple threads
 
 		// remove redundant Indels for 'detect' command
-		//cout << "[" << time.getTime() << "]: remove redundant indels on chromosome ..." << endl;
 		removeRedundantIndelDetect();	//0s
-
-		// merge the results to single file
-		//chrMergeDetectResultToFile();
 
 		chrResetIlluminaMisAlnRegFile();
 	}
@@ -3355,15 +3347,13 @@ int Chrome::chrIlluminaMisIdentify(){
 	return 0;
 }
 
-// Illumina single thread
+// misasm single thread
 int Chrome::chrIlluminaMisIdentify_st(){
-	//Time time;
 	Block* bloc;
 	for(size_t i=0; i<blockVector.size(); i++){
 		bloc = blockVector.at(i);
 		if(bloc->process_flag)
 		{
-			//cout << "[" << time.getTime() << "]: [" << i << "]: detect files:" << bloc->out_dir_detect << "/" << bloc->snvFilenameDetect << ", " << bloc->indelFilenameDetect << endl;
 			bloc->blockIlluminaDetect();
 		}
 	}
@@ -3371,9 +3361,10 @@ int Chrome::chrIlluminaMisIdentify_st(){
 	return 0;
 }
 
-// Illumina multiple threads
+// misasm multiple threads
 int Chrome::chrIlluminaMisIdentify_mt(){
 	MultiThread mt[paras->num_threads];
+
 	for(size_t i=0; i<paras->num_threads; i++){
 		mt[i].setNumThreads(paras->num_threads);
 		mt[i].setBlockVec(&blockVector);

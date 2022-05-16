@@ -3,10 +3,12 @@
 #include <fstream>
 #include <string>
 #include <pthread.h>
+#include <iomanip>
 #include <htslib/thread_pool.h>
 
 #include "LocalAssembly.h"
 #include "Genome.h"
+
 #include "Thread.h"
 
 using namespace std;
@@ -32,7 +34,7 @@ Genome::~Genome(){
 	vector<Chrome*> chr_vec_tmp;
 	string chrname_tmp, result_prefix;
 
-	chrname_tmp = "";	//20220501
+	chrname_tmp = "";
 
 	out_dir = paras->outDir;
 	if(out_dir.size()>0){
@@ -62,8 +64,8 @@ Genome::~Genome(){
 	out_filename_detect_snv = out_dir_detect + "/" + result_prefix + "genome_SNV_candidates";
 //	out_filename_detect_indel = out_dir_detect + "/" + result_prefix + "genome_INDEL_candidate";
 //	out_filename_detect_clipReg = out_dir_detect + "/" + result_prefix + "genome_clipReg_candidate";
-	out_filename_detect_indel = out_dir_detect + "/" + result_prefix + "genome_Indel";	//20220429
-	out_filename_detect_clipReg = out_dir_detect + "/" + result_prefix + "genome_Misjoin";	//20220429
+	out_filename_detect_indel = out_dir_detect + "/" + result_prefix + "genome_Indel";
+	out_filename_detect_clipReg = out_dir_detect + "/" + result_prefix + "genome_Misjoin";
 	out_filename_result_snv = out_dir_result + "/" + result_prefix + "genome_SNV";
 	out_filename_result_indel = out_dir_result + "/" + result_prefix + "genome_INDEL.bed";
 	out_filename_result_clipReg = out_dir_result + "/" + result_prefix + "genome_clipReg.bed";
@@ -104,13 +106,12 @@ Genome::~Genome(){
 }
 */
 
-//20220503
 void Genome::init(){
 	Chrome *chr;
 	vector<Chrome*> chr_vec_tmp;
 	string chrname_tmp, result_prefix;
 
-	chrname_tmp = "";	//20220501
+	chrname_tmp = "";
 
 	out_dir = paras->outDir;
 	if(out_dir.size()>0){
@@ -126,8 +127,11 @@ void Genome::init(){
 
 	result_prefix = "";
 	if(paras->outFilePrefix.size()) result_prefix = paras->outFilePrefix + "_";
-	out_filename_detect_indel = out_dir_detect + "/" + result_prefix + "genome_Indel";	//20220429
-	out_filename_detect_clipReg = out_dir_detect + "/" + result_prefix + "genome_Misjoin";	//20220429
+//	out_filename_detect_indel = out_dir_detect + "/" + result_prefix + "genome_Indel";
+//	out_filename_detect_clipReg = out_dir_detect + "/" + result_prefix + "genome_Misjoin";
+
+	out_filename_detect_indel = out_dir_detect + "/../" + "genome_Indel";
+	out_filename_detect_clipReg = out_dir_detect + "/../" + "genome_Misjoin";
 
 	limit_reg_filename = out_dir_detect + "/" + paras->limit_reg_filename;
 
@@ -398,22 +402,29 @@ int Genome::genomeIlluminaMisIdentify(){
 	isizeest.estInsertSize(paras->insert_isize, paras->insert_sdev, paras->insert_max, paras->insert_min);	//0.49s
 	cout << "isize:" << paras->insert_isize << ", sdev:" << paras->insert_sdev << ", isize_max:" << paras->insert_max << ", isize_min:" << paras->insert_min << endl << endl;	//0.47s
 
+	cout << "######## start scaffold analysis ########" << endl;
+	cout << "Total scaffolds: " << chromeVector.size() << endl;
+	float tmp = 0;
 	for(size_t i=0; i<chromeVector.size(); i++){
 		chr = chromeVector.at(i);
 		chr->chrIlluminaMisIdentify();
+
+		if(100*(float)i/chromeVector.size()-tmp >= 1){
+			cout << "processed scaffolds: " << i << "/" << chromeVector.size();
+			cout << " (" << setprecision(4) << 100*float(i)/chromeVector.size() << "%" << ")" << endl;
+			tmp = 100*(float)i/chromeVector.size();
+		}
+
 	}
+	cout << "processed scaffolds: " << chromeVector.size() << "/" << chromeVector.size();
+	cout << " (" << setprecision(4) << 100*float(chromeVector.size())/chromeVector.size() << "%" << ")" << endl << endl;
 
-	// remove overlapped indels from mate clipping regions
-//	removeOverlappedIndelFromMateClipReg();	//time = 357s
+	saveMisasmResultToFile();
 
-	// save detect result to file for each chrome
-//	saveDetectResultToFileIllumina();	//0.01s
-	saveMisasmResultToFile();	//20220503
-
-	mergeDetectResultIllumina();	//1.34s
+	mergeDetectResultIllumina();
 
 	// compute statistics for detect command
-	computeIlluminaMisNumStatDetect();	//0s
+	computeIlluminaMisNumStatDetect();
 
 	return 0;
 }
@@ -1234,12 +1245,12 @@ void Genome::blatAlnTra_mt(vector<blatAlnTra*> *blat_aln_tra_vec){
 	MultiThread mt[paras->num_threads];
 	for(size_t i=0; i<paras->num_threads; i++){
 		mt[i].setNumThreads(paras->num_threads);
-		mt[i].setBlatAlnTraVec(blat_aln_tra_vec);
+//		mt[i].setBlatAlnTraVec(blat_aln_tra_vec);
 		mt[i].setUserThreadID(i);
-		if(!mt[i].startBlatAlnTra()){
-			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
-			exit(1);
-		}
+//		if(!mt[i].startBlatAlnTra()){
+//			cerr << __func__ << ", line=" << __LINE__ << ": unable to create thread, error!" << endl;
+//			exit(1);
+//		}
 	}
 	for(size_t i=0; i<paras->num_threads; i++){
 		if(!mt[i].join()){

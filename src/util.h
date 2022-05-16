@@ -95,13 +95,13 @@ void releaseMismatchRegVec(vector<mismatchReg_t*> &misReg_vec);
 mismatchReg_t *getMismatchReg(int32_t aln_idx, vector<mismatchReg_t*> &misReg_vec);
 bool isPolymerSeq(string &seq);
 
-// Merge continuous regions 20210626
+// Merge continuous regions
 void mergeContinuousReg(vector<reg_t*> &regVector);
 bool isContinuousReg(reg_t* reg1, reg_t* reg2);
 bool isContinuousPos(size_t startPos1, size_t endPos1, size_t startPos2, size_t endPos2);
 void updateContinuousReg(reg_t* reg1, reg_t* reg2);
 
-// remove overlapped regions 20220428
+// remove overlapped regions
 void removeOverlappedReg(vector<reg_t*> &regVector);
 void updateOverlappedReg(reg_t* reg1, reg_t* reg2);
 

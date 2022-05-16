@@ -619,7 +619,7 @@ int Block::processSingleRegion(int64_t startRpos, int64_t endRPos, int64_t regFl
 	return 0;
 }
 
-// Illumina process single region
+// misasm process single region
 int Block::processSingleRegionIllumina(vector<bam1_t*> &alnDataVector, int64_t startRpos, int64_t endRPos, int64_t regFlag){
 	vector<simpleReg_t*> sub_limit_reg_vec_tmp;
 	bool process_flag;
@@ -635,9 +635,9 @@ int Block::processSingleRegionIllumina(vector<bam1_t*> &alnDataVector, int64_t s
 
 	if(process_flag){
 
-		detectIlluminaSlideAlnData(startRpos, endRPos);	//scaffold_42,0.03s
+		detectIlluminaSlideAlnData(startRpos, endRPos);
 
-		// construct a region	//500bp,0.05s
+		// construct a region
 		Region tmp_reg(chrname, startRpos, endRPos, chrlen, startPos, endPos, baseArr+startRpos-startPos, regFlag, paras);
 
 		tmp_reg.setMeanBlockCov(meanCov);  // set the mean coverage
@@ -654,10 +654,10 @@ int Block::processSingleRegionIllumina(vector<bam1_t*> &alnDataVector, int64_t s
 
 			tmp_reg.detectIlluminaBaseClipReg();
 
-			// detect indel candidate regions and SNV candidates
-			tmp_reg.detectIlluminaIndelReg();   // (500bp, 0s)
+			// detect indel
+			tmp_reg.detectIlluminaIndelReg();
 
-			// copy the indels and SNVs
+			// copy the indels and misjoins
 			copySVEvents(tmp_reg);
 		}
 	}
@@ -959,6 +959,7 @@ void Block::saveSV2File(){
 	out_file.close();
 }
 
+// save misassemblies to file
 void Block::saveMisassembly2File(){
 	ofstream out_file;
 	string out_file_str;
@@ -981,7 +982,7 @@ void Block::saveMisassembly2File(){
 	}
 	out_file.close();
 
-	// save clip region
+	// save misjoin
 	out_file_str = out_dir_detect + "/" + clipRegFilenameDetect;
 	out_file.open(out_file_str);
 	if(!out_file.is_open()){
@@ -1384,11 +1385,11 @@ void Block::blockIlluminaDetect(){
 	// compute abnormal signatures
 	computeAbSigsIllumina(alnDataVector);
 
-// remove overlap indels according to clipping regions
+	// remove overlap indels according to clipping regions
 	removeOverlapIndel();
-//	removeOverlapClip();
+	// removeOverlapClip();
 
-	// sort the indels and clip regions // time=0s
+	// sort the indels and clip regions
 	sortRegVec(indelVector);
 	sortRegVec(clipRegVector);
 
@@ -1404,16 +1405,12 @@ void Block::blockIlluminaDetect(){
 	mergeContinuousReg(indelVector);
 	mergeContinuousReg(clipRegVector);
 
-	// remove overlapped misjoin regions 20220428
+	// remove overlapped misjoin regions
 	removeOverlappedReg(indelVector);
 	removeOverlappedReg(clipRegVector);
 
 	// save SV to file
-//	saveSV2File();	//time=0s
-	saveMisassembly2File();	//20220503
-
-	// output base coverage
-	//outputCovFile();
+	saveMisassembly2File();
 
 	// release memory
 	if(baseArr) destroyBaseArray();

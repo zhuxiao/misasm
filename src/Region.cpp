@@ -248,7 +248,7 @@ reg_t* Region::allocateReg(string &chrname, int64_t startPosReg, int64_t endPosR
 	return reg;
 }
 
-//20220504
+// allocate reg for misasm
 reg_t* Region::allocateMisReg(string &chrname, int64_t startPosReg, int64_t endPosReg, string misType){
 	reg_t *reg = new reg_t();
 	if(!reg){
@@ -269,7 +269,7 @@ reg_t* Region::allocateMisReg(string &chrname, int64_t startPosReg, int64_t endP
 	reg->zero_cov_flag = false;
 	reg->aln_seg_end_flag = false;
 
-	reg->misType = misType;	//20220504
+	reg->misType = misType;
 	return reg;
 }
 
@@ -590,25 +590,22 @@ void Region::detectIlluminaIndelReg(){
 reg_t* Region::getIlluminaIndelReg(int64_t startCheckPos){
 	reg_t *reg = NULL;
 	int64_t i, checkPos, startPos_indel, endPos_indel;
-	string misType_indel;	//20220504
+	string misType_indel;
 
 	checkPos = startCheckPos;
 	startPos_indel = endPos_indel = -1;
-	misType_indel = "";	//20220504
+	misType_indel = "";
 
 	while(checkPos<=endMidPartPos){
-//		if(regBaseArr[checkPos-startRPos].isIlluminaHighIndelBase(MIN_HIGH_INDEL_BASE_RATIO)){
 		if(regBaseArr[checkPos-startRPos].isIlluminaHighInsBase(paras->indelRatio)){
 			startPos_indel = checkPos;
 			for(i=startPos_indel+1; i<=endMidPartPos; i++){
-//				if(regBaseArr[i-startRPos].isIlluminaHighIndelBase(MIN_HIGH_INDEL_BASE_RATIO)){
 				if(regBaseArr[i-startRPos].isIlluminaHighInsBase(paras->indelRatio)){
 					continue;
 				}else{
 					endPos_indel = i-1;
-//					reg = allocateReg(chrname, startPos_indel, endPos_indel);
-					misType_indel = "Insertion";	//20220504
-					reg = allocateMisReg(chrname, startPos_indel, endPos_indel, misType_indel);	//20220504
+					misType_indel = "Insertion";
+					reg = allocateMisReg(chrname, startPos_indel, endPos_indel, misType_indel);
 					break;
 				}
 			}
@@ -624,8 +621,8 @@ reg_t* Region::getIlluminaIndelReg(int64_t startCheckPos){
 					continue;
 				}else{
 					endPos_indel = i-1;
-					misType_indel = "Deletion";	//20220504
-					reg = allocateMisReg(chrname, startPos_indel, endPos_indel, misType_indel);	//20220504
+					misType_indel = "Deletion";
+					reg = allocateMisReg(chrname, startPos_indel, endPos_indel, misType_indel);
 					break;
 				}
 			}
@@ -922,8 +919,7 @@ reg_t* Region::getIlluminaClipReg(vector<bam1_t*> &slideAlnVector, int64_t start
 	return reg;
 }
 
-//	20220423
-//	get Misjoin
+// get Misjoin
 void Region::detectIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector){
 	reg_t *reg = NULL;
 	int64_t i = startMidPartPos;
@@ -942,14 +938,12 @@ void Region::detectIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector){
 	clipRegVector.shrink_to_fit();
 }
 
-
-// 20220423
 // get the Illumina misjoin region
 reg_t* Region::getIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos){
 	reg_t *reg = NULL;
 	int64_t checkPos,startPos_tmp, endPos_tmp, startPos_misjoin, endPos_misjoin, misjoinPos_tmp;
 	bool gap_flag, abpair_flag;
-	string misType_misjoin;	//20220504
+	string misType_misjoin;
 
 	gap_flag = abpair_flag = false;
 	startPos_misjoin = endPos_misjoin = misjoinPos_tmp = -1;
@@ -958,7 +952,6 @@ reg_t* Region::getIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t st
 
 	while(checkPos<=endMidPartPos){
 		startPos_tmp = checkPos;
-//		endPos_tmp = checkPos + SUB_MISJOIN_REG_SIZE - 1;
 		endPos_tmp = checkPos + paras->subblockSize - 1;
 		if(endPos_tmp>endMidPartPos) endPos_tmp = endMidPartPos;
 
@@ -968,8 +961,8 @@ reg_t* Region::getIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t st
 			abpair_flag = isIlluminaAbPairing(slideAlnVector, startPos_tmp, endPos_tmp);
 
 			if(abpair_flag==true){
-				estIlluminaAbPairStartPos(slideAlnVector, startPos_tmp);	//20220425
-				estIlluminaAbPairEndPos(slideAlnVector, endPos_tmp);	//20220426
+				estIlluminaAbPairStartPos(slideAlnVector, startPos_tmp);
+				estIlluminaAbPairEndPos(slideAlnVector, endPos_tmp);
 				startPos_misjoin = abpairstartpos;
 				endPos_misjoin = abpairendpos;
 
@@ -990,7 +983,6 @@ reg_t* Region::getIlluminaMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t st
 	return reg;
 }
 
-//	20220427
 int Region::estIlluminaAbPairStartPos(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos){
 	int64_t checkPos;
 	bool flag_abpairpos= false;
@@ -1022,7 +1014,6 @@ int Region::estIlluminaAbPairStartPos(vector<bam1_t*> &slideAlnVector, int64_t s
 	return 0;
 }
 
-//	20220427
 int Region::estIlluminaAbPairEndPos(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos){
 	int64_t checkPos;
 	bool flag_abpairpos= false;
@@ -1053,16 +1044,15 @@ int Region::estIlluminaAbPairEndPos(vector<bam1_t*> &slideAlnVector, int64_t sta
 	return 0;
 }
 
-//	20220424
 bool Region::isIlluminaAbPairPos(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos){
 	bool flag = false;
 	int64_t checkPos;
 	int64_t count_abref, count_abdirection, count_paired_reads, count_exisizemax, count_lessisizemin;
-	double ratio_baseexisizemax, ratio_baselessisizemin, ratio_baseabdirection, ratio_baseabref;	//20220424
+	double ratio_baseexisizemax, ratio_baselessisizemin, ratio_baseabdirection, ratio_baseabref;
 
 	checkPos = startCheckPos;
 	count_abref = count_abdirection = count_paired_reads = count_exisizemax = count_lessisizemin = 0;
-	ratio_baseexisizemax = ratio_baselessisizemin = ratio_baseabdirection = ratio_baseabref = 0;	//20220424
+	ratio_baseexisizemax = ratio_baselessisizemin = ratio_baseabdirection = ratio_baseabref = 0;
 
 	for(size_t i=0; i<slideAlnVector.size(); i++){
 		if(bam_endpos(slideAlnVector[i])>=checkPos){
@@ -1099,16 +1089,14 @@ bool Region::isIlluminaAbPairPos(vector<bam1_t*> &slideAlnVector, int64_t startC
 	return flag;
 }
 
-
-//	20220422
-//	get clipping
+// get clipping
 void Region::detectIlluminaBaseClipReg(){
 	reg_t *reg = NULL;
 	int64_t i = startMidPartPos;
 	if(i<1) i = 1;
 	while(i<endMidPartPos){
 
-		reg = getIlluminaBaseClipReg(i);	//20220421
+		reg = getIlluminaBaseClipReg(i);
 		if(reg) {
 			clipRegVector.push_back(reg);
 			i = reg->endRefPos + 1;
@@ -1118,63 +1106,27 @@ void Region::detectIlluminaBaseClipReg(){
 }
 
 
-//	20220422 clip region
-/*reg_t* Region::getIlluminaBaseClipReg(int64_t startCheckPos){
-	reg_t *reg = NULL;
-	int64_t i, checkPos, startPos_clip, endPos_clip;
-
-	checkPos = startCheckPos;
-	startPos_clip = endPos_clip = -1;
-
-	while(checkPos<=endMidPartPos){
-		if(regBaseArr[checkPos-startRPos].isIlluminaHighClipBase(ILLUMINA_HIGH_CLIP_BASE_THRES)){
-			startPos_clip = checkPos;
-			for(i=startPos_clip+1; i<=endMidPartPos; i++){
-				if(regBaseArr[i-startRPos].isIlluminaHighClipBase(ILLUMINA_HIGH_CLIP_BASE_THRES)){
-					continue;
-				}else{
-					endPos_clip = i-1;
-					reg = allocateReg(chrname, startPos_clip, endPos_clip);
-					cout << chrname << ":" << startPos_clip << "-" << endPos_clip << ", clipping region" << endl;
-					break;
-				}
-			}
-			break;
-
-		}else{
-			checkPos++;
-			startPos_clip = endPos_clip = -1;
-		}
-	}
-	return reg;
-}
-*/
-
-//20220428 clip region without gap
+// clip region without gap
 reg_t* Region::getIlluminaBaseClipReg(int64_t startCheckPos){
 	reg_t *reg = NULL;
 	int64_t i, checkPos, startPos_clip, endPos_clip;
-	string misType_clip;	//20220504
+	string misType_clip;
 
 	checkPos = startCheckPos;
 	startPos_clip = endPos_clip = -1;
-	misType_clip = "";	//20220504
+	misType_clip = "";
 
 	if(!isIlluminaGapReg(checkPos, endMidPartPos)){
 		while(checkPos<=endMidPartPos){
-//			if(regBaseArr[checkPos-startRPos].isIlluminaHighClipBase(ILLUMINA_HIGH_CLIP_BASE_THRES)){
 			if(regBaseArr[checkPos-startRPos].isIlluminaHighClipBase(paras->highclipRatio)){
 				startPos_clip = checkPos;
 				for(i=startPos_clip+1; i<=endMidPartPos; i++){
-//					if(regBaseArr[i-startRPos].isIlluminaHighClipBase(ILLUMINA_HIGH_CLIP_BASE_THRES)){
 					if(regBaseArr[i-startRPos].isIlluminaHighClipBase(paras->highclipRatio)){
 						continue;
 					}else{
 						endPos_clip = i-1;
-//						reg = allocateReg(chrname, startPos_clip, endPos_clip);
-						misType_clip = "High_clipping";	//20220504
-						reg = allocateMisReg(chrname, startPos_clip, endPos_clip, misType_clip);	//20220504
-//						cout << chrname << ":" << startPos_clip << "-" << endPos_clip << ", clipping region" << endl;
+						misType_clip = "High_clipping";
+						reg = allocateMisReg(chrname, startPos_clip, endPos_clip, misType_clip);
 						break;
 					}
 				}
@@ -1190,7 +1142,6 @@ reg_t* Region::getIlluminaBaseClipReg(int64_t startCheckPos){
 	return reg;
 }
 
-//	20220423
 void Region::detectIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector){
 	reg_t *reg = NULL;
 	int64_t i = startMidPartPos;
@@ -1206,16 +1157,15 @@ void Region::detectIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector){
 	clipRegVector.shrink_to_fit();
 }
 
-//	20220423
 reg_t* Region::getIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t startCheckPos){
 	reg_t *reg = NULL;
 	int64_t checkPos, i, startPos_gap, endPos_gap;
 	size_t N_num = 0;
-	string misType_gap;	//20220504
+	string misType_gap;
 
 	checkPos = startCheckPos;
 	startPos_gap = endPos_gap = -1;
-	misType_gap = "";	//20220504
+	misType_gap = "";
 
 	while(checkPos<=endMidPartPos){
 		if(regBaseArr[checkPos-startRPos].coverage.idx_RefBase==4){
@@ -1227,13 +1177,9 @@ reg_t* Region::getIlluminaGapMisjoinReg(vector<bam1_t*> &slideAlnVector, int64_t
 			}
 			if(N_num>=MIN_GAP_SIZE){
 				endPos_gap = i-1;
-//				cout << chrname << ":" << checkPos << "-" << i-1 << ", gapsize:" << N_num << endl;
-//	20220502
-//				estIlluminaRegInsertsize(slideAlnVector, startPos_gap-GAP_EXTEND_REG_SIZE, endPos_gap+GAP_EXTEND_REG_SIZE);
 				estIlluminaRegInsertsize(slideAlnVector, startPos_gap-paras->gapextendSize, endPos_gap+paras->gapextendSize);
 				if(fragmentsize>=paras->insert_max or fragmentsize<=paras->insert_min){
 				misType_gap = "Abnormal_gap";
-//				reg = allocateReg(chrname, startPos_gap, endPos_gap);
 				reg = allocateMisReg(chrname, startPos_gap, endPos_gap, misType_gap);	//20220504
 				}
 				break;
@@ -1344,38 +1290,6 @@ void Region::estIlluminaPairing(vector<bam1_t*> &slideAlnVector, int64_t startPo
 	ratio_abdirection = (double) count_abdirection / count_reads;
 	ratio_abref = (double) count_abref / count_reads;
 }
-
-//void Region::estIlluminaPairing(vector<bam1_t*> &slideAlnVector, int64_t startPos, int64_t endPos){
-//	int64_t count_reads, count_abref, count_abdirection, count_paired_reads, count_exisizemax, count_lessisizemin;
-//	count_reads = count_abref = count_abdirection = count_paired_reads = count_exisizemax = count_lessisizemin = 0;
-//
-//	for(size_t i=0; i<slideAlnVector.size(); i++){
-//
-//		if((bam_endpos(slideAlnVector[i])>=startPos and bam_endpos(slideAlnVector[i])<=endPos) or (slideAlnVector[i]->core.pos<=endPos and bam_endpos(slideAlnVector[i])>endPos)){
-//			if(slideAlnVector[i]->core.tid == slideAlnVector[i]->core.mtid){ // the query and the query's mate are on the reference
-//				if(slideAlnVector[i]->core.pos < slideAlnVector[i]->core.mpos and (slideAlnVector[i]->core.flag&BAM_FSUPPLEMENTARY) == 0 and slideAlnVector[i]->core.isize > 0){
-//
-//					if(!bam_is_rev(slideAlnVector[i]) and bam_is_mrev(slideAlnVector[i])){
-//						count_paired_reads++; // get the paired reads count
-//
-//						if(slideAlnVector[i]->core.isize >= paras->insert_max) count_exisizemax++; // the paired reads count of the insert size more than the insert size maximum
-//						if(slideAlnVector[i]->core.isize <= paras->insert_min) count_lessisizemin++; // the paired reads count of the insert size lower than the insert size minimum
-//					}else
-//						count_abdirection++; // the paired reads count of the error pairing direction
-//				}
-//			}else
-//				count_abref ++;
-//		}
-//		if(slideAlnVector[i]->core.pos>endPos) break;
-//	}
-//	count_reads = count_abref + count_abdirection + count_paired_reads;
-//
-//	ratio_exisizemax = (double) count_exisizemax / count_reads;
-//	ratio_lessisizemin = (double) count_lessisizemin / count_reads;
-//	ratio_abdirection = (double) count_abdirection / count_reads;
-//	ratio_abref = (double) count_abref / count_reads;
-//
-//}
 
 bool Region::isIlluminaGapClipReg(vector<bam1_t*> &slideAlnVector, int64_t startPos, int64_t endPos){
 	bool flag = false;

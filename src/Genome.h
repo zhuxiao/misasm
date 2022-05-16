@@ -66,7 +66,7 @@ class Genome{
 		mateClipReg_t* getSameClipRegTRA(mateClipReg_t *clip_reg_given, vector<Chrome*> &chrome_vec);
 		void saveDetectResultToFile();
 		void saveDetectResultToFileIllumina();
-		void saveMisasmResultToFile();	//20220503
+		void saveMisasmResultToFile();
 		void mergeDetectResult();
 		void mergeDetectResultIllumina();
 		void genomeLoadDataAssemble();

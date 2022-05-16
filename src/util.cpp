@@ -2175,7 +2175,7 @@ void Time::printOverallElapsedTime(){
 	}
 }
 
-// Merge continuous regions 20210626
+// Merge continuous regions
 void mergeContinuousReg(vector<reg_t*> &regVector){
 	size_t i, j;
 	reg_t *reg1, *reg2;
@@ -2228,7 +2228,7 @@ void updateContinuousReg(reg_t* reg1, reg_t* reg2){
 	reg1->endRefPos = new_endRefPos;
 }
 
-// Remove overlapped regions 20220429
+// Remove overlapped regions
 void removeOverlappedReg(vector<reg_t*> &regVector){
 	size_t i, j;
 	reg_t *reg1, *reg2;

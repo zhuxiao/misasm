@@ -7,7 +7,7 @@ misasm can identify both misjoins and indels (i.e. insertions and deletions, e.g
 
 ## Prerequisites
 misasm depends on the following libraries and tools:
-- [HTSlib(V1.9 or later)](https://github.com/samtools/htslib)
+- [HTSlib (1.9 or later)](https://github.com/samtools/htslib)
 - g++ (v4.7 or later which supports c++11).
 
 
@@ -36,20 +36,21 @@ There are 17 misassemblies detected in total:
 	15 misjoins
 	2 indels
 ```
+The detected indel errors and misjoins will be output to `genome_Indel` and `genome_Misjoin` file, respectively.
 
 The help informartion can be shown:
 ```sh
-Program：misasm (misassembly detector)
-Version：0.1.0 (using htslib 1.9)
+Program: misasm (misassembly detector)
+Version: 0.4.0 (using htslib 1.9)
 
-Usage：misasm [options] <ASM_FILE> <BAM_FILE>
+Usage: misasm [options] <ASM_FILE> <BAM_FILE>
 
-Description：
-	   ASM_FILE      Assembled squence file（required）
-	   BAM_FILE      Coordinate-sorted BAM file（required）
+Description:
+     ASM_FILE     Assembled sequence file (required)
+     BAM_FILE     Coordinate-sorted BAM file (required)
 
 Options:
-     -b INT       block size [1000000]
+     -b INT       block size [10000]
      -s INT       detect slide size [1000]
      -u INT       detect subblock size [100]
      -g INT       gap extend region size [500]
@@ -60,6 +61,7 @@ Options:
      -c INT       maximal clipping region size to detect [10000]
      -o DIR       output directory [output]
      -p STR       prefix of output result files [null]
+     -t INT       number of concurrent work [1]
      -h           show this help message and exit
 ```
 
@@ -73,7 +75,7 @@ The assembled squence and sorted BAM file will be the input of misasm.
 
 ## Contact
 
-If you have problems or some suggestions, please contact: [email](zhuxiao_hit@yeah.net) without hesitation. 
+If you have problems or some suggestions, please contact: [zhuxiao_hit@yeah.net](zhuxiao_hit@yeah.net) without hesitation. 
 
 ---- Enjoy !!! -----
 

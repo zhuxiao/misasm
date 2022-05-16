@@ -13,12 +13,9 @@
 using namespace std;
 
 // program variables
-//#define PROG_NAME					"ASVCLR"
-//#define PROG_DESC					"Accurate Structural Variant Caller for Long Reads"
-//#define PROG_VERSION				"0.7.0"
 #define PROG_NAME					"misasm"
 #define PROG_DESC					"misassembly detector"
-#define PROG_VERSION				"0.1.0"
+#define PROG_VERSION				"0.4.0"
 
 #define SIZE_EST_OP					0
 #define NUM_EST_OP					1
@@ -33,10 +30,10 @@ using namespace std;
 //#define BLOCKSIZE  					1000000
 //#define SLIDESIZE  					500
 //#define ASSEM_SLIDE_SIZE			5000
-#define BLOCKSIZE  					1000000
+#define BLOCKSIZE  					10000
 #define SLIDESIZE  					1000
-#define SUBBLOCKSIZE  				100	//20220502
-#define GAP_EXTEND_REG_SIZE  		500	//20220502
+#define SUBBLOCKSIZE  				100
+#define GAP_EXTEND_REG_SIZE  		500
 #define ASSEM_SLIDE_SIZE			5000
 
 #define MIN_INDEL_EVENT_SIZE		2
@@ -82,7 +79,6 @@ using namespace std;
 #define MIN_HIGH_CONSENSUS_INS_RATIO		0.3f
 #define MIN_HIGH_CONSENSUS_DEL_RATIO		0.4f
 
-//20220502
 #define MIN_ABNORMAL_PAIRING_RATIO			0.3
 #define HIGH_CLIP_BASE_RATIO				0.8
 #define MIN_INDEL_BASE_RATIO				0.3
@@ -92,18 +88,17 @@ class Paras
 {
 	public:
 		// user/system defined parameters
-		string command, refFile, inBamFile, outFilePrefix; //, canu_version;
+		string command, refFile, inBamFile, outFilePrefix;
 		string outDir;
-		string out_dir_detect = "misassemblies";	//20220429
-//		string out_dir_detect = "1_candidates";    // "1_candidates"
+		string out_dir_detect = "misassemblies";
 		string out_dir_assemble = "2_assemble";  // "2_assemble"
 		string out_dir_call = "3_call";      // "3_call"
 		string out_dir_tra = out_dir_call + "/" + "tra";
 		string out_dir_result = "4_results";	// "4_results"
 		size_t blockSize, slideSize, assemSlideSize, min_sv_size_usr, num_threads, large_indel_size_thres;
 
-		size_t subblockSize, gapextendSize;	//20220502
-		float abpairRatio, highclipRatio, indelRatio;//20220502
+		size_t subblockSize, gapextendSize;
+		float abpairRatio, highclipRatio, indelRatio;
 
 		bool maskMisAlnRegFlag, load_from_file_flag;
 		size_t misAlnRegLenSum = 0;
@@ -159,8 +154,8 @@ class Paras
 		void init();
 		//string getCanuVersion();
 		int parseParas(int argc, char **argv);
-		int misasmParas(int argc, char **argv);	//20220502
-		int parseMisasmParas(int argc, char **argv);//20220502
+		int misasmParas(int argc, char **argv);
+		int parseMisasmParas(int argc, char **argv);
 		int parseDetectParas(int argc, char **argv);
 		int parseAssembleParas(int argc, char **argv);
 		int parseCallParas(int argc, char **argv);

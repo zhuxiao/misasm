@@ -38,8 +38,8 @@ class Base
 		bool isZeroCovBase();
 		bool isHighIndelBase(float threshold, float ignore_polymer_ratio_threshold);
 		bool isIlluminaHighIndelBase(float threshold);
-		bool isIlluminaHighInsBase(float threshold);	// 20220504
-		bool isIlluminaHighDelBase(float threshold);	//	20220504
+		bool isIlluminaHighInsBase(float threshold);
+		bool isIlluminaHighDelBase(float threshold);
 		bool isHighConIndelBase(float threshold, float ignore_polymer_ratio_threshold);
 		bool isIlluminaHighConIndelBase(float threshold);
 
@@ -51,11 +51,6 @@ class Base
 		size_t getLargeIndelNum(size_t thres);
 		size_t getTotalIndelNum();
 		size_t getTotalClipNum();
-//		size_t getInsNum();
-//		size_t getDelNum();
-//		bool isInsBase();
-//		bool isDelBase();
-//		bool isClipBase();
 
 		bool isIlluminaHighClipBase(float threshold);
 
